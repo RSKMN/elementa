@@ -96,7 +96,7 @@ class GreenCoverCalculator:
         if filepath:
             self.red_path = filepath
             self.red_label.config(text=os.path.basename(filepath))
-    
+
     def select_nir_band(self):
         filepath = filedialog.askopenfilename(
             title="Select NIR Band (B8) GeoTIFF",
@@ -105,79 +105,78 @@ class GreenCoverCalculator:
         if filepath:
             self.nir_path = filepath
             self.nir_label.config(text=os.path.basename(filepath))
-    
+
     def select_boundary(self):
         filepath = filedialog.askopenfilename(
             title="Select Boundary Shapefile",
             filetypes=[("Shapefiles", "*.shp"), ("GeoJSON", "*.geojson"), ("All files", "*.*")]
-        )
+        )   
         if filepath:
             self.boundary_path = filepath
             self.boundary_label.config(text=os.path.basename(filepath))
-    
+
     def calculate_green_cover(self):
         if not self.red_path or not self.nir_path:
             messagebox.showerror("Error", "Please select both Red and NIR band files")
             return
-        
+    
         try:
             # Open raster files
             with rasterio.open(self.red_path) as red_src, rasterio.open(self.nir_path) as nir_src:
                 red = red_src.read(1).astype('float32')
                 nir = nir_src.read(1).astype('float32')
-                
-                # Check if files have same shape
+            
+            # Check if files have same shape
                 if red.shape != nir.shape:
                     messagebox.showerror("Error", "Red and NIR bands have different dimensions")
                     return
-                
-                # Create a meta profile for outputs
+            
+            # Create a meta profile for outputs
                 meta = red_src.meta.copy()
-                
-                # Apply boundary mask if provided
+            
+            # Apply boundary mask if provided
                 if self.boundary_path:
                     try:
                         # Read the boundary file
                         gdf = gpd.read_file(self.boundary_path)
                         if gdf.crs != red_src.crs:
                             gdf = gdf.to_crs(red_src.crs)
-                        
-                        # Mask the rasters
+                    
+                    # Create shapes list for mask
                         shapes = [mapping(geom) for geom in gdf.geometry]
-                        red, _ = mask(red_src, shapes, crop=True, nodata=0)
+                        red, red_transform = mask(red_src, shapes, crop=True, nodata=0)
                         red = red[0]
-                        nir, _ = mask(nir_src, shapes, crop=True, nodata=0)
+                        nir, nir_transform = mask(nir_src, shapes, crop=True, nodata=0)
                         nir = nir[0]
+                    # Update metadata for cropped image (if needed)
+                        meta.update({
+                            "height": red.shape[0],
+                            "width": red.shape[1],
+                            "transform": red_transform
+                        })
                     except Exception as e:
                         messagebox.showerror("Error", f"Error applying boundary mask: {str(e)}")
                         return
-                
-                # Calculate NDVI
-                # Avoid division by zero
-                denominator = nir + red
-                ndvi = np.zeros_like(denominator)
-                valid_idx = denominator > 0
-                ndvi[valid_idx] = (nir[valid_idx] - red[valid_idx]) / (denominator[valid_idx])
-                
-                # Apply threshold
+            
+            # Calculate NDVI safely: avoid division by zero
+                denominator = nir + red + 1e-6  # add a small number to avoid zero division
+                ndvi = (nir - red) / denominator
+            
+            # Apply threshold to create green mask
                 threshold = self.ndvi_threshold.get()
                 green_mask = ndvi > threshold
-                
-                # Calculate green cover
+            
+            # Calculate green cover statistics
                 total_pixels = np.sum(~np.isnan(ndvi))
                 green_pixels = np.sum(green_mask)
-                
-                if total_pixels > 0:
-                    green_percentage = (green_pixels / total_pixels) * 100
-                else:
-                    green_percentage = 0
-                
-                # Calculate area
-                pixel_size = self.pixel_size.get()
+                green_percentage = (green_pixels / total_pixels) * 100 if total_pixels > 0 else 0
+            
+            # Calculate area (using pixel size provided in meters)
+                pixel_size = self.pixel_size.get()  # assume this is in meters
                 total_area_sqkm = (total_pixels * pixel_size * pixel_size) / 1e6
                 green_area_sqkm = (green_pixels * pixel_size * pixel_size) / 1e6
-                
-                # Display results in text area
+            
+            # Display results in text area
                 self.results_text.delete(1.0, tk.END)
                 results = (
                     f"Green Cover Analysis Results:\n"
@@ -188,25 +187,39 @@ class GreenCoverCalculator:
                     f"NDVI Threshold Used: {threshold}\n"
                 )
                 self.results_text.insert(tk.END, results)
-                
-                # Display RGB and NDVI
-                # For RGB approximation, use Red band only (grayscale)
+            
+            # Prepare images for display (downsample if necessary)
+            def downsample(image, max_dim=1024):
+                # Downsample an image array to max_dim pixels in each dimension if it's larger
+                import cv2
+                height, width = image.shape
+                scale = 1
+                if max(height, width) > max_dim:
+                    scale = max_dim / max(height, width)
+                    new_size = (int(width * scale), int(height * scale))
+                    image = cv2.resize(image, new_size, interpolation=cv2.INTER_AREA)
+                return image
+                        # Downsample for display only
+                red_display = downsample(red)
+                ndvi_display = downsample(ndvi)
+            
+            # Display RGB approximation using Red band (as grayscale)
                 self.ax1.clear()
-                self.ax1.imshow(red, cmap='gray')
+                self.ax1.imshow(red_display, cmap='gray')
                 self.ax1.set_title("Red Band (Grayscale)")
                 self.ax1.axis('off')
-                
-                # Display NDVI map
+            
+            # Display NDVI map
                 self.ax2.clear()
-                ndvi_img = self.ax2.imshow(ndvi, cmap='RdYlGn', vmin=-1, vmax=1)
+                ndvi_img = self.ax2.imshow(ndvi_display, cmap='RdYlGn', vmin=-1, vmax=1)
                 self.ax2.set_title(f"NDVI Map (Green > {threshold})")
                 self.ax2.axis('off')
                 plt.colorbar(ndvi_img, ax=self.ax2, fraction=0.046, pad=0.04)
-                
+            
                 self.fig.tight_layout()
                 self.canvas.draw()
-                
-                # Store results for saving
+            
+            # Store results for saving
                 self.results = {
                     'ndvi': ndvi,
                     'green_mask': green_mask,
@@ -215,12 +228,12 @@ class GreenCoverCalculator:
                     'green_area_sqkm': green_area_sqkm,
                     'green_percentage': green_percentage
                 }
-                
+            
         except Exception as e:
             messagebox.showerror("Error", f"An error occurred: {str(e)}")
             import traceback
             traceback.print_exc()
-    
+
     def save_results(self):
         if not hasattr(self, 'results'):
             messagebox.showerror("Error", "No results to save. Please calculate green cover first.")
