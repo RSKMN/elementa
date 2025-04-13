@@ -1,3 +1,4 @@
+
 # 🌿 Elementa – AI-Powered Green Urban Infrastructure Platform
 
 **Elementa** is an AI-driven sustainability platform designed to tackle pressing urban issues such as inefficient land use, declining green spaces, climate risks, and unoptimized traffic flow. It leverages satellite imagery, real-time analytics, and predictive modeling to help cities become smarter, greener, and more resilient—all without relying on IoT infrastructure.
@@ -6,7 +7,7 @@
 
 ## 🔍 Problem Statement
 
-Indian cities are experiencing unsustainable growth marked by shrinking green cover, rising urban heat, and fragmented planning. Elementa provides a unified, data-driven solution that uses AI and remote sensing to enable climate-adaptive, eco-conscious urban development.
+Indian cities are experiencing unsustainable growth marked by shrinking green cover, rising urban heat, and fragmented planning. **Elementa** provides a unified, data-driven solution that uses AI and remote sensing to enable climate-adaptive, eco-conscious urban development.
 
 ---
 
@@ -52,40 +53,37 @@ Flutter, Firebase
 Ethereum, Hyperledger Fabric, Smart Contracts
 
 ---
-```
-## 📁 Folder Structure
-
-elementa/
-├── backend/           # API services and ML inference
-├── frontend/          # Web dashboard for data visualization
-├── mobile-app/        # Flutter app for citizen interaction
-├── ai-models/         # Deep learning & prediction models
-├── satellite-data/    # Remote sensing and preprocessing scripts
-├── blockchain/        # Smart contracts & ledger logic
-└── README.md          # Project documentation
-
----
 
 ## 🛠️ Getting Started
 
-1. Clone the Repository
+Follow these steps to set up and run the project locally:
+
+### 1. Clone the Repository
+```bash
 git clone https://github.com/RSKMN/elementa.git
 cd elementa
+```
 
-2. Start Backend
+### 2. Install Backend Dependencies
+```bash
 cd backend
 pip install -r requirements.txt
 python app.py
+```
 
-3. Start Frontend
+### 3. Start Frontend
+```bash
 cd frontend
 npm install
 npm start
+```
 
-4. Run Mobile App
+### 4. Run Mobile App
+```bash
 cd mobile-app
 flutter pub get
 flutter run
+```
 
 ---
 
@@ -112,9 +110,9 @@ flutter run
 We welcome contributions from developers, urban planners, researchers, and students!
 
 Fork the repository  
-Create your branch: git checkout -b feature/YourFeature  
-Commit your changes: git commit -m 'Add YourFeature'  
-Push to the branch: git push origin feature/YourFeature  
+Create your branch: `git checkout -b feature/YourFeature`  
+Commit your changes: `git commit -m 'Add YourFeature'`  
+Push to the branch: `git push origin feature/YourFeature`  
 Submit a pull request
 
 ---
@@ -134,4 +132,3 @@ Got feedback or ideas? Open an issue or reach out via GitHub Discussions.
 ---
 
 🚫 **Note:** This project is no longer maintained. Development has been discontinued, but the repository remains available for learning and reference.
-```
