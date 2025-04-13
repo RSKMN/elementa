@@ -52,80 +52,86 @@ Flutter, Firebase
 Ethereum, Hyperledger Fabric, Smart Contracts
 
 ---
-
+```
 ## 📁 Folder Structure
 
-elementa/ ├── backend/ # API services and ML inference ├── frontend/ # Web dashboard for data visualization ├── mobile-app/ # Flutter app for citizen interaction ├── ai-models/ # Deep learning & prediction models ├── satellite-data/ # Remote sensing and preprocessing scripts ├── blockchain/ # Smart contracts & ledger logic └── README.md # Project documentation
-
-yaml
-Copy
-Edit
+elementa/
+├── backend/           # API services and ML inference
+├── frontend/          # Web dashboard for data visualization
+├── mobile-app/        # Flutter app for citizen interaction
+├── ai-models/         # Deep learning & prediction models
+├── satellite-data/    # Remote sensing and preprocessing scripts
+├── blockchain/        # Smart contracts & ledger logic
+└── README.md          # Project documentation
 
 ---
 
 ## 🛠️ Getting Started
 
-### 1. Clone the Repository
-
-```bash
+1. Clone the Repository
 git clone https://github.com/RSKMN/elementa.git
 cd elementa
+
 2. Start Backend
-bash
-Copy
-Edit
 cd backend
 pip install -r requirements.txt
 python app.py
+
 3. Start Frontend
-bash
-Copy
-Edit
 cd frontend
 npm install
 npm start
+
 4. Run Mobile App
-bash
-Copy
-Edit
 cd mobile-app
 flutter pub get
 flutter run
-🧪 Sample Use Cases
-✅ Green Cover Optimization – Suggest tree plantations and eco-zoning.
 
-✅ Heat Island Detection – Identify areas requiring reflective or green infrastructure.
+---
 
-✅ Emergency Vehicle Routing – AI-based path suggestions to reduce response time.
+## 🧪 Sample Use Cases
 
-✅ Water Body Health Tracking – Highlight pollution or shrinkage trends.
-
+✅ Green Cover Optimization – Suggest tree plantations and eco-zoning.  
+✅ Heat Island Detection – Identify areas requiring reflective or green infrastructure.  
+✅ Emergency Vehicle Routing – AI-based path suggestions to reduce response time.  
+✅ Water Body Health Tracking – Highlight pollution or shrinkage trends.  
 ✅ Public Participation – Citizens can report illegal encroachments or hazards.
 
-💡 What Makes Elementa Unique?
-🌐 IoT-Free Scalability – Uses satellite data instead of costly sensors, making deployment affordable and accessible.
+---
 
-🔮 Proactive Planning – Offers simulation and forecasting tools, not just reactive insights.
+## 💡 What Makes Elementa Unique?
 
+🌐 IoT-Free Scalability – Uses satellite data instead of costly sensors, making deployment affordable and accessible.  
+🔮 Proactive Planning – Offers simulation and forecasting tools, not just reactive insights.  
 🛡️ Secure Citizen Reporting – Incorporates blockchain to ensure transparency and prevent data tampering.
 
-🤝 Contributing
+---
+
+## 🤝 Contributing
+
 We welcome contributions from developers, urban planners, researchers, and students!
 
-Fork the repository
-
-Create your branch: git checkout -b feature/YourFeature
-
-Commit your changes: git commit -m 'Add YourFeature'
-
-Push to the branch: git push origin feature/YourFeature
-
+Fork the repository  
+Create your branch: git checkout -b feature/YourFeature  
+Commit your changes: git commit -m 'Add YourFeature'  
+Push to the branch: git push origin feature/YourFeature  
 Submit a pull request
 
-📃 License
+---
+
+## 📃 License
+
 This project is licensed under the MIT License — see the LICENSE file for details.
 
-📬 Contact
-Built with 💚 by Team Hermes – JNTU Hyderabad
-Project Lead: @RSKMN
-Got feedback or ideas? Open an issue or reach out via [email or GitHub Discussions].
+---
+
+## 📬 Contact
+
+Built with 💚 by Team Hermes – JNTU Hyderabad  
+Project Lead: @RSKMN  
+Got feedback or ideas? Open an issue or reach out via GitHub Discussions.
+
+---
+
+🚫 **Note:** This project is no longer maintained. Development has been discontinued, but the repository remains available for learning and reference.
+```
